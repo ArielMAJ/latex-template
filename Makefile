@@ -7,7 +7,7 @@ ifeq ($(HALT_ON_ERROR),1)
 else
   PDFLATEX_OPTS := pdflatex -interaction=nonstopmode
 endif
-FLAGS           := -pdf -pdflatex="$(PDFLATEX_OPTS)" -use-make -auxdir=$(OUT_DIR) -jobname=$(PROJECT)
+FLAGS           := -pdf -pdflatex="$(PDFLATEX_OPTS)" -auxdir=$(OUT_DIR) -jobname=$(PROJECT)
 LATEX_IMAGE     := texlive/texlive:latest
 
 # Auto-detect: prefer local latexmk, fall back to Docker/Podman
