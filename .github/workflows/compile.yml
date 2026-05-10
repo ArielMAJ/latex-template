@@ -12,8 +12,6 @@ jobs:
   build:
     name: Build PDF
     runs-on: ubuntu-latest
-    # Skip when the CI bot commits the PDF back
-    if: github.actor != 'github-actions[bot]'
 
     steps:
       - name: Checkout branch
@@ -30,13 +28,24 @@ jobs:
             echo "::warning::This branch is $BEHIND commit(s) behind main. Merge main before requesting a review, otherwise the compiled PDF may not reflect the final state after merging."
           fi
 
+      - name: Check if LaTeX sources changed
+        id: sources
+        run: |
+          if git diff --quiet origin/main...HEAD -- main.tex references.bib figures/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Compile LaTeX document
+        if: steps.sources.outputs.changed == 'true'
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           args: -pdf -interaction=nonstopmode -file-line-error -jobname=${{ github.event.repository.name }}
 
       - name: Commit compiled PDF
+        if: steps.sources.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "ci: recompile PDF"
