@@ -30,7 +30,7 @@ jobs:
           # latexmk -pdf uses pdflatex by default; swap flags for XeLaTeX/LuaLaTeX:
           #   latexmk_use_xelatex: true
           #   latexmk_use_lualatex: true
-          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+          args: -pdf -interaction=nonstopmode -file-line-error -jobname=${{ github.event.repository.name }}
 
       # ── 3. Commit the compiled PDF back to the PR branch ────────────────────
       - name: Commit compiled PDF
