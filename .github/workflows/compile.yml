@@ -14,40 +14,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Check out the PR branch (not detached HEAD) ──────────────────────
       - name: Checkout branch
         uses: actions/checkout@v4
         with:
-          # Use a PAT if the repo has branch protection that blocks GITHUB_TOKEN
-          # pushes; otherwise GITHUB_TOKEN is fine.
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # ── 2. Warn if branch is not up-to-date with main ────────────────────────
       - name: Check branch is up-to-date with main
         run: |
           git fetch origin main
           BEHIND=$(git rev-list --count HEAD..origin/main)
           if [ "$BEHIND" -gt 0 ]; then
-            echo "::warning::This branch is $BEHIND commit(s) behind main. Rebase or merge main into your branch before requesting a review, otherwise the compiled PDF may not reflect the final state after merging."
+            echo "::warning::This branch is $BEHIND commit(s) behind main. Merge main before requesting a review, otherwise the compiled PDF may not reflect the final state after merging."
           fi
 
-      # ── 3. Compile ───────────────────────────────────────────────────────────
+      - name: Check if LaTeX sources changed
+        id: sources
+        run: |
+          if git diff --quiet origin/main...HEAD -- main.tex references.bib figures/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Compile LaTeX document
+        if: steps.sources.outputs.changed == 'true'
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
-          # latexmk -pdf uses pdflatex by default; swap flags for XeLaTeX/LuaLaTeX:
-          #   latexmk_use_xelatex: true
-          #   latexmk_use_lualatex: true
           args: -pdf -interaction=nonstopmode -file-line-error -jobname=${{ github.event.repository.name }}
 
-      # ── 3. Commit the compiled PDF back to the PR branch ────────────────────
       - name: Commit compiled PDF
+        if: steps.sources.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "ci: recompile PDF [skip ci]"
+          commit_message: "ci: recompile PDF"
           file_pattern: "*.pdf"
-          # Prevents the commit from triggering this workflow again
           commit_options: "--no-verify"
-          skip_dirty_check: false # skip commit if PDF didn't change
+          skip_dirty_check: false
