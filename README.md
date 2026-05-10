@@ -66,7 +66,7 @@ On every push to any branch **except `main`**, the workflow:
 2. Compiles `main.tex` using the full `texlive/texlive` Docker image
 3. Commits the resulting PDF back to the same branch
 
-This means every branch always has an up-to-date PDF that reviewers can download directly from GitHub without needing a local TeX installation.
+This means every non-`main` branch always has an up-to-date PDF that reviewers can download directly from GitHub without needing a local TeX installation.
 
 ### Branch strategy
 
