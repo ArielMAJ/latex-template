@@ -32,6 +32,8 @@
 
 ## latexmk
 .latexmk_*
+.watch.pid
+latexmk.log
 
 ## Overleaf / editor artifacts
 .DS_Store
@@ -41,6 +43,5 @@ Thumbs.db
 *~
 .vscode/
 
-## Compiled output — tracked intentionally so CI can commit it to PRs.
-## Remove the negation below if you prefer not to track PDFs.
-# *.pdf
+## Build output directory (auxiliary files only; PDF stays in root)
+build/

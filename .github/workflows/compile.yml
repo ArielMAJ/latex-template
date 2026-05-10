@@ -1,9 +1,8 @@
 name: Compile LaTeX
 
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
+  push:
+    branches-ignore: [main]
 
 # Allow the workflow to push compiled PDFs back to the PR branch
 permissions:
@@ -16,10 +15,9 @@ jobs:
 
     steps:
       # ── 1. Check out the PR branch (not detached HEAD) ──────────────────────
-      - name: Checkout PR branch
+      - name: Checkout branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
           # Use a PAT if the repo has branch protection that blocks GITHUB_TOKEN
           # pushes; otherwise GITHUB_TOKEN is fine.
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -43,4 +41,4 @@ jobs:
           file_pattern: "*.pdf"
           # Prevents the commit from triggering this workflow again
           commit_options: "--no-verify"
-          skip_dirty_check: false   # skip commit if PDF didn't change
+          skip_dirty_check: false # skip commit if PDF didn't change
