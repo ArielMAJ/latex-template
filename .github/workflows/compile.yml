@@ -2,6 +2,7 @@ name: Compile LaTeX
 
 on:
   push:
+    branches-ignore: [main]
 
 # Allow the workflow to push compiled PDFs back to the PR branch
 permissions:
@@ -22,7 +23,16 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # ── 2. Compile ───────────────────────────────────────────────────────────
+      # ── 2. Warn if branch is not up-to-date with main ────────────────────────
+      - name: Check branch is up-to-date with main
+        run: |
+          git fetch origin main
+          BEHIND=$(git rev-list --count HEAD..origin/main)
+          if [ "$BEHIND" -gt 0 ]; then
+            echo "::warning::This branch is $BEHIND commit(s) behind main. Rebase or merge main into your branch before requesting a review, otherwise the compiled PDF may not reflect the final state after merging."
+          fi
+
+      # ── 3. Compile ───────────────────────────────────────────────────────────
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:

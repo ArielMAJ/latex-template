@@ -60,22 +60,27 @@ make pull         # pull/update the Docker image
 
 ## GitHub Actions workflow
 
-On every push to any branch, the workflow:
+On every push to any branch **except `main`**, the workflow:
 
-1. Compiles `main.tex` using the full `texlive/texlive` Docker image
-2. Commits the resulting PDF back to the same branch
+1. Checks if the branch is up-to-date with `main` and emits a warning if not
+2. Compiles `main.tex` using the full `texlive/texlive` Docker image
+3. Commits the resulting PDF back to the same branch
 
-This means every branch (including `main`) always has an up-to-date PDF that reviewers can download directly from GitHub without needing a local TeX installation.
+This means every branch always has an up-to-date PDF that reviewers can download directly from GitHub without needing a local TeX installation.
 
 ### Branch strategy
 
 | Branch      | Purpose                                                     |
 | ----------- | ----------------------------------------------------------- |
-| `main`      | Stable, PDF auto-compiled on every push                     |
+| `main`      | Stable, only receives merges                                |
 | `<feature>` | Writing, revisions, experiments (PDF auto-compiled on push) |
+
+> **Important:** CI does not run on `main`, so the PDF is never recompiled there. This means the PDF committed to a branch always reflects exactly what will land on `main` after the merge, but only if the branch is **up-to-date with `main`** before merging. Always merge `main` into your branch and let CI recompile before requesting a review.
 
 ### Reviewing a draft
 
-1. Open a PR from your branch to `main`
-2. Reviewer downloads the PDF directly from the branch
-3. Feedback is left as PR comments
+1. Merge `main` into your branch to ensure it is up-to-date
+2. Push so CI recompiles the PDF with all latest changes included
+3. Open a PR from your branch to `main`
+4. Reviewer downloads the PDF directly from the branch
+5. Feedback is left as PR comments
