@@ -1,7 +1,13 @@
 MAIN            := main
 PROJECT         := $(notdir $(PWD))
 OUT_DIR         := build
-FLAGS           := -pdf -pdflatex="pdflatex -interaction=nonstopmode -halt-on-error" -use-make -auxdir=$(OUT_DIR) -jobname=$(PROJECT)
+HALT_ON_ERROR   ?= 0
+ifeq ($(HALT_ON_ERROR),1)
+  PDFLATEX_OPTS := pdflatex -interaction=nonstopmode -halt-on-error
+else
+  PDFLATEX_OPTS := pdflatex -interaction=nonstopmode
+endif
+FLAGS           := -pdf -pdflatex="$(PDFLATEX_OPTS)" -use-make -auxdir=$(OUT_DIR) -jobname=$(PROJECT)
 LATEX_IMAGE     := texlive/texlive:latest
 
 # Auto-detect: prefer local latexmk, fall back to Docker/Podman
