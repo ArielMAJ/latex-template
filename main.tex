@@ -1,0 +1,114 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Encoding & Language ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+% ---------- Page layout ----------
+\usepackage[margin=1in]{geometry}
+
+% ---------- Math ----------
+\usepackage{amsmath,amssymb,amsthm}
+
+% ---------- Graphics & Figures ----------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{float}
+
+% ---------- Tables ----------
+\usepackage{booktabs}
+
+% ---------- Hyperlinks ----------
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ---------- Bibliography ----------
+\usepackage[numbers,sort&compress]{natbib}
+
+% ---------- Misc ----------
+\usepackage{microtype}   % better text rendering
+\usepackage{lipsum}      % lorem ipsum (remove when writing real content)
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+% ---------- Theorem environments ----------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+
+% =========================================
+\title{Your Article Title}
+\author{
+  Author One\thanks{affiliation, email} \and
+  Author Two\thanks{affiliation, email}
+}
+\date{\today}
+% =========================================
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Write your abstract here. Keep it concise (150--250 words): motivation, problem,
+  approach, key results, and significance.
+\end{abstract}
+
+% Optional: keywords
+\noindent\textbf{Keywords:} keyword one, keyword two, keyword three.
+
+% =========================================
+\section{Introduction}
+\label{sec:intro}
+
+\lipsum[1]   % replace with your own text
+
+% =========================================
+\section{Related Work}
+\label{sec:related}
+
+\lipsum[2]
+
+% =========================================
+\section{Background}
+\label{sec:background}
+
+\lipsum[3]
+
+% =========================================
+\section{Approach}
+\label{sec:approach}
+
+\lipsum[4-5]
+
+% =========================================
+\section{Evaluation}
+\label{sec:evaluation}
+
+\lipsum[6]
+
+% =========================================
+\section{Results}
+\label{sec:results}
+
+\lipsum[7]
+
+% =========================================
+\section{Discussion}
+\label{sec:discussion}
+
+\lipsum[8]
+
+% =========================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+\lipsum[9]
+
+% =========================================
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,46 @@
+## LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.lof
+*.lot
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.ist
+*.loa
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+
+## latexmk
+.latexmk_*
+
+## Overleaf / editor artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+
+## Compiled output — tracked intentionally so CI can commit it to PRs.
+## Remove the negation below if you prefer not to track PDFs.
+# *.pdf

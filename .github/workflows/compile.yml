@@ -1,0 +1,46 @@
+name: Compile LaTeX
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+# Allow the workflow to push compiled PDFs back to the PR branch
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build PDF
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Check out the PR branch (not detached HEAD) ──────────────────────
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          # Use a PAT if the repo has branch protection that blocks GITHUB_TOKEN
+          # pushes; otherwise GITHUB_TOKEN is fine.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # ── 2. Compile ───────────────────────────────────────────────────────────
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          # latexmk -pdf uses pdflatex by default; swap flags for XeLaTeX/LuaLaTeX:
+          #   latexmk_use_xelatex: true
+          #   latexmk_use_lualatex: true
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+
+      # ── 3. Commit the compiled PDF back to the PR branch ────────────────────
+      - name: Commit compiled PDF
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: recompile PDF [skip ci]"
+          file_pattern: "*.pdf"
+          # Prevents the commit from triggering this workflow again
+          commit_options: "--no-verify"
+          skip_dirty_check: false   # skip commit if PDF didn't change
