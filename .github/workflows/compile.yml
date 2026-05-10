@@ -2,7 +2,6 @@ name: Compile LaTeX
 
 on:
   push:
-    branches-ignore: [main]
 
 # Allow the workflow to push compiled PDFs back to the PR branch
 permissions:
